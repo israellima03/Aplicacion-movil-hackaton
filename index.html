@@ -5,12 +5,146 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PLATA — Inicio</title>
 <link rel="stylesheet" href="css/main.css">
+<style>
+
+/* ——— LOGO ENZ en hero ——— */
+.enz-logo-hero {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.enz-logo-hero img {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  object-fit: contain;
+  background: rgba(0,0,0,0.3);
+}
+.enz-logo-hero-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ——— PESITO FAB mejorado ——— */
+.pesito-fab-wrap {
+  position: fixed;
+  bottom: 90px;
+  right: calc(50% - 215px + 16px);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+@media (max-width: 430px) {
+  .pesito-fab-wrap { right: 16px; }
+}
+
+/* Burbuja de mensaje sobre Pesito */
+.pesito-bubble {
+  background: #fff;
+  border: 0.5px solid #e2e8f0;
+  border-radius: 12px 12px 12px 4px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #1a202c;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  margin-bottom: 6px;
+  animation: bubblePop .4s cubic-bezier(.175,.885,.32,1.275) both;
+  animation-delay: 1.2s;
+  opacity: 0;
+}
+.pesito-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; left: 14px;
+  width: 8px; height: 8px;
+  background: #fff;
+  border-right: 0.5px solid #e2e8f0;
+  border-bottom: 0.5px solid #e2e8f0;
+  transform: rotate(45deg);
+}
+@keyframes bubblePop {
+  from { opacity: 0; transform: scale(.7) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Botón Pesito */
+.pesito-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 0 0 2.5px rgba(42,123,155,0.35), 0 8px 24px rgba(42,123,155,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  animation: pesitoFloat 3s ease-in-out infinite;
+  position: relative;
+}
+.pesito-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(87,199,133,0.5), 0 12px 28px rgba(42,123,155,0.4);
+  animation: none;
+}
+.pesito-btn:active { transform: scale(0.94); }
+
+.pesito-btn img {
+  width: 54px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Badge de notificación */
+.pesito-badge {
+  position: absolute;
+  top: -2px; right: -2px;
+  width: 18px; height: 18px;
+  background: #EDDD53;
+  color: #333;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  z-index: 1;
+}
+
+@keyframes pesitoFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
+/* Ocultar el chat-fab original */
+.chat-fab { display: none !important; }
+
+</style>
 </head>
 <body>
 
 <header class="hero-header fade-up">
   <div class="hero-top">
     <div style="display:flex;flex-direction:column;gap:2px">
+      <!-- Logo ENZ arriba del saludo -->
+      <div class="enz-logo-hero">
+        <img src="img/logo.png" alt="ENZ">
+        <span class="enz-logo-hero-text">ENZ</span>
+      </div>
       <span class="greeting-label" id="saludo">Hola, buen día</span>
       <span class="hero-name">Juan Pérez</span>
     </div>
@@ -121,6 +255,17 @@
 
 <div class="pb-nav"></div>
 
+<!-- ══ PESITO FAB (reemplaza el chat-fab original) ══ -->
+<div class="pesito-fab-wrap" onclick="location.href='chatbox.html'">
+  <div class="pesito-bubble" style="position:relative">
+    ¡Hola! ¿Te ayudo? 😊
+  </div>
+  <div class="pesito-btn">
+    <img src="img/mascota.jpeg" alt="Pesito">
+    <div class="pesito-badge">1</div>
+  </div>
+</div>
+
 <nav class="bottom-nav">
   <a href="index.html" class="nav-item active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Inicio</span></a>
   <a href="salud-financiera.html" class="nav-item"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Mi salud</span></a>
@@ -129,7 +274,30 @@
   <a href="mi-perfil.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Mi perfil</span></a>
 </nav>
 
-<button class="chat-fab" onclick="location.href='chatbox.html'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="chat-fab-badge">1</span></button>
-
 <script src="js/main.js"></script>
-</body></html>
+<script>
+  // Ocultar burbuja de Pesito al hacer scroll
+  const pesitoWrap = document.querySelector('.pesito-fab-wrap');
+  const pesitoBubble = document.querySelector('.pesito-bubble');
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const goingDown = y > lastScrollY && y > 60;
+    pesitoWrap.style.transition = 'transform .3s, opacity .3s';
+    pesitoWrap.style.transform = goingDown ? 'translateY(100px)' : 'translateY(0)';
+    pesitoWrap.style.opacity   = goingDown ? '0' : '1';
+    lastScrollY = y;
+  });
+
+  // Auto-ocultar burbuja después de 5 segundos
+  setTimeout(() => {
+    if (pesitoBubble) {
+      pesitoBubble.style.transition = 'opacity .5s';
+      pesitoBubble.style.opacity = '0';
+      setTimeout(() => pesitoBubble.style.display = 'none', 500);
+    }
+  }, 5000);
+</script>
+</body>
+</html>

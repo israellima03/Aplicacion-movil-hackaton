@@ -1,5 +1,5 @@
 // =============================================
-// PLATA — main.js
+// PLATA — main.js (FIXED v2)
 // =============================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       visible = !visible;
       balanceVal.textContent = visible ? '118.19' : '••••••';
       balanceVal.style.letterSpacing = visible ? '-2px' : '4px';
+      balanceVal.style.fontSize = visible ? '' : '28px';
     });
   }
 
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bar = document.getElementById('salud-bar');
   if (bar) {
     bar.style.width = '0%';
-    setTimeout(() => { bar.style.width = '52%'; }, 600);
+    setTimeout(() => { bar.style.width = '52%'; }, 400);
   }
 
   // ── Ripple en botones ──
@@ -37,11 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const d = Math.max(this.clientWidth, this.clientHeight);
       const r = this.getBoundingClientRect();
       Object.assign(circle.style, {
-        position: 'absolute', width: d+'px', height: d+'px',
-        left: (e.clientX - r.left - d/2)+'px',
-        top:  (e.clientY - r.top  - d/2)+'px',
-        background: 'rgba(255,255,255,.3)', borderRadius: '50%',
-        transform: 'scale(0)', animation: 'ripple .5s linear', pointerEvents: 'none'
+        position: 'absolute',
+        width: d + 'px',
+        height: d + 'px',
+        left: (e.clientX - r.left - d / 2) + 'px',
+        top:  (e.clientY - r.top  - d / 2) + 'px',
+        background: 'rgba(255,255,255,.35)',
+        borderRadius: '50%',
+        transform: 'scale(0)',
+        animation: 'ripple .5s linear',
+        pointerEvents: 'none',
+        zIndex: '10'
       });
       this.style.position = 'relative';
       this.style.overflow = 'hidden';
@@ -50,35 +57,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  if (!document.getElementById('ripple-style')) {
-    const s = document.createElement('style');
-    s.id = 'ripple-style';
-    s.textContent = '@keyframes ripple{to{transform:scale(4);opacity:0}}';
-    document.head.appendChild(s);
-  }
-
   // ── Alerta: cerrar al tocar ──
-  const alert = document.getElementById('alert-strip');
-  if (alert) {
-    alert.addEventListener('click', () => {
-      alert.style.transition = 'opacity .3s, max-height .3s, margin .3s, padding .3s';
-      alert.style.opacity = '0';
-      alert.style.maxHeight = '0';
-      alert.style.padding = '0';
-      alert.style.margin = '0';
+  const alertEl = document.getElementById('alert-strip');
+  if (alertEl) {
+    alertEl.addEventListener('click', () => {
+      alertEl.style.opacity    = '0';
+      alertEl.style.maxHeight  = '0';
+      alertEl.style.padding    = '0';
+      alertEl.style.margin     = '0';
+      alertEl.style.overflow   = 'hidden';
     });
   }
 
-  // ── Chat FAB: ocultar al scroll ──
+  // ── Chat FAB: ocultar al hacer scroll hacia abajo ──
   const fab = document.querySelector('.chat-fab');
-  let lastY = window.scrollY;
-  window.addEventListener('scroll', () => {
-    if (!fab) return;
-    const y = window.scrollY;
-    fab.style.transform = (y > lastY && y > 80) ? 'translateY(120px)' : 'translateY(0)';
-    fab.style.opacity   = (y > lastY && y > 80) ? '0' : '1';
-    fab.style.transition = 'transform .3s, opacity .3s';
-    lastY = y;
+  if (fab) {
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY;
+          const goingDown = y > lastY && y > 60;
+          fab.style.transform = goingDown ? 'translateY(100px)' : 'translateY(0)';
+          fab.style.opacity   = goingDown ? '0' : '1';
+          lastY = y;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  // ── Progress bars animadas (páginas internas) ──
+  document.querySelectorAll('.prog-fill').forEach(fill => {
+    const target = fill.style.width;
+    fill.style.width = '0%';
+    setTimeout(() => {
+      fill.style.width = target;
+    }, 300);
+  });
+
+  // ── Active nav item highlight ──
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const href = item.getAttribute('href');
+    if (href && href === currentPath) {
+      // ya viene marcado en el HTML pero por si acaso
+      item.classList.add('active');
+    }
+  });
+
+  // ── Smooth scroll para elementos internos ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   });
 
 });
