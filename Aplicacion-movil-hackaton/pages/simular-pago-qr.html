@@ -66,7 +66,7 @@
     Guarda <strong id="sugerencia-monto" style="color:var(--verde)">Bs. 0.00</strong> (1% del pago) en tu caja de ahorros.
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
       <button id="btn-rechazar-ahorro" class="sim-btn-rechazar">No, gracias</button>
-      <button id="btn-aceptar-ahorro" class="sim-btn-aceptar">Si, guardar</button>
+      <button id="btn-aceptar-ahorro" class="sim-btn-aceptar">Sí, guardar</button>
     </div>
   </div>
 </div>
@@ -74,13 +74,13 @@
 <div id="comprobante" class="qrpay-receipt fade-up fd4" style="display:none">
   <div class="qrpay-ok">
     <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    Pago realizado con exito
+    Pago realizado con éxito
   </div>
   <div class="qrpay-row"><span>Destinatario</span><strong id="r-dest">-</strong></div>
   <div class="qrpay-row"><span>Producto</span><strong id="r-prod">-</strong></div>
   <div class="qrpay-row"><span>Monto pagado</span><strong id="r-monto">-</strong></div>
   <div class="qrpay-row"><span>Fecha / hora</span><strong id="r-fecha">-</strong></div>
-  <div class="qrpay-row"><span>ID operacion</span><strong id="r-id">-</strong></div>
+  <div class="qrpay-row"><span>ID operación</span><strong id="r-id">-</strong></div>
   <div class="qrpay-row"><span>Aporte a ahorro</span><strong id="r-ahorro">Bs. 0.00</strong></div>
 </div>
 
@@ -89,7 +89,7 @@
   <div class="qrpay-chip-row fade-up fd5" id="chips"></div>
   <div class="info-box blue fade-up fd6" style="margin:10px 16px 0" id="categoria-msg">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <div>Elegi una categoria para registrar el tipo de gasto.</div>
+    <div>Elegí una categoría para registrar el tipo de gasto.</div>
   </div>
   <div class="qrpay-finish-wrap fade-up fd6">
     <button id="btn-finalizar" class="btn-primary" disabled>
@@ -129,13 +129,13 @@
 
   var categorias = [
     { key: 'necesidad', title: 'Necesidad', sub: 'Prioritario', tip: 'Gasto funcional y prioritario. Mantiene control financiero.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M3 12l9-9 9 9\"/><path d=\"M5 10v10h14V10\"/></svg>' },
-    { key: 'ocio', title: 'Ocio', sub: 'Recreativo', tip: 'Consumo recreativo. Defini un tope mensual para no excederte.', icon: '<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 15s1.5 2 4 2 4-2 4-2\"/><circle cx=\"9\" cy=\"10\" r=\"1\"/><circle cx=\"15\" cy=\"10\" r=\"1\"/></svg>' },
-    { key: 'comida', title: 'Comida', sub: 'Alimentacion', tip: 'Si es fuera de presupuesto, compensalo en otro rubro.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M4 3v7a3 3 0 0 0 3 3v8\"/><path d=\"M8 3v7\"/><path d=\"M12 3v7\"/><path d=\"M19 3v18\"/><path d=\"M16 8h6\"/></svg>' },
+    { key: 'ocio', title: 'Ocio', sub: 'Recreativo', tip: 'Consumo recreativo. Definí un tope mensual para no excederte.', icon: '<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 15s1.5 2 4 2 4-2 4-2\"/><circle cx=\"9\" cy=\"10\" r=\"1\"/><circle cx=\"15\" cy=\"10\" r=\"1\"/></svg>' },
+    { key: 'comida', title: 'Comida', sub: 'Alimentación', tip: 'Si es fuera de presupuesto, compensalo en otro rubro.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M4 3v7a3 3 0 0 0 3 3v8\"/><path d=\"M8 3v7\"/><path d=\"M12 3v7\"/><path d=\"M19 3v18\"/><path d=\"M16 8h6\"/></svg>' },
     { key: 'impulsiva', title: 'Compra impulsiva', sub: 'Alerta', tip: 'Espera 24 horas antes de repetir este tipo de compra.', icon: '<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg>' },
-    { key: 'tecnologia', title: 'Producto tecnologico', sub: 'Tech', tip: 'Compara vida util vs costo para validar la compra.', icon: '<svg viewBox=\"0 0 24 24\"><rect x=\"4\" y=\"3\" width=\"16\" height=\"14\" rx=\"2\"/><path d=\"M8 21h8\"/><path d=\"M10 17v4\"/><path d=\"M14 17v4\"/></svg>' },
+    { key: 'tecnologia', title: 'Producto tecnológico', sub: 'Tech', tip: 'Compará vida útil vs. costo para validar la compra.', icon: '<svg viewBox=\"0 0 24 24\"><rect x=\"4\" y=\"3\" width=\"16\" height=\"14\" rx=\"2\"/><path d=\"M8 21h8\"/><path d=\"M10 17v4\"/><path d=\"M14 17v4\"/></svg>' },
     { key: 'transporte', title: 'Transporte', sub: 'Movilidad', tip: 'Suma viajes para identificar picos semanales.', icon: '<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"6\" width=\"18\" height=\"10\" rx=\"2\"/><circle cx=\"7\" cy=\"18\" r=\"2\"/><circle cx=\"17\" cy=\"18\" r=\"2\"/></svg>' },
-    { key: 'salud', title: 'Salud', sub: 'Bienestar', tip: 'Rubro de alta prioridad, mantene fondo especifico.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M12 21s-7-4.5-9-9a5.5 5.5 0 0 1 9-6 5.5 5.5 0 0 1 9 6c-2 4.5-9 9-9 9z\"/></svg>' },
-    { key: 'educacion', title: 'Educacion', sub: 'Inversion', tip: 'Inversion de largo plazo, ideal registrarla aparte.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M2 7l10-5 10 5-10 5-10-5z\"/><path d=\"M6 10v6c0 1 3 3 6 3s6-2 6-3v-6\"/></svg>' },
+    { key: 'salud', title: 'Salud', sub: 'Bienestar', tip: 'Rubro de alta prioridad, mantené un fondo específico.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M12 21s-7-4.5-9-9a5.5 5.5 0 0 1 9-6 5.5 5.5 0 0 1 9 6c-2 4.5-9 9-9 9z\"/></svg>' },
+    { key: 'educacion', title: 'Educación', sub: 'Inversión', tip: 'Inversión de largo plazo: ideal registrarla aparte.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M2 7l10-5 10 5-10 5-10-5z\"/><path d=\"M6 10v6c0 1 3 3 6 3s6-2 6-3v-6\"/></svg>' },
     { key: 'hogar', title: 'Hogar', sub: 'Casa', tip: 'Separa mantenimiento de compras nuevas para mayor claridad.', icon: '<svg viewBox=\"0 0 24 24\"><path d=\"M3 12l9-8 9 8\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/></svg>' }
   ];
 
@@ -196,7 +196,7 @@
     categoriasWrap.style.display = 'block';
     categoriaSeleccionada = null;
     btnFinalizar.disabled = true;
-    categoriaMsg.textContent = 'Elegi una categoria para registrar el tipo de gasto.';
+    categoriaMsg.textContent = 'Elegí una categoría para registrar el tipo de gasto.';
     chips.querySelectorAll('.qrpay-chip').forEach(function (x) { x.classList.remove('is-active'); });
   }
 
